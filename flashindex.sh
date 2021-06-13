@@ -24,7 +24,7 @@
 
 #Μεταβλητές σελίδας
 SCRIPTNAME="flashindex.sh"
-VERSION="0.8"
+VERSION="0.0"
 DEVICE="Verbatim USB drive"
 PAGECOMMENT="© Copyright <a href=\"https://ionas.dev\">Ιωνάρας</a> 2020 $SCRIPTNAME $VERSION"
 #Μεταβλητές καταλόγων
@@ -158,6 +158,11 @@ printhtml "<meta charset=\"utf-8\">"
 printhtml '<meta name="viewport" content="width=device-width, initial-scale=1.0"> '
 printhtml "<title>${DEVICE} index</title>"
 printhtml "<meta title=\"generator\" content=\"$SCRIPTNAME $VERSION\">"
+printhtml "<script>
+const hideFiles = (dir) => (dir.nextElementSibling.style.display === 'none') ? dir.nextElementSibling.style.display = 'revert' : dir.nextElementSibling.style.display = 'none';
+const expandAll = () => document.querySelectorAll('ul.files').forEach((contents) => contents.style.display = 'revert');
+const collapseAll = () => document.querySelectorAll('ul.files').forEach((contents) => contents.style.display = 'none');
+</script>"
 if [ -n "$STYLESHEET" ] && [ -r "$STYLESHEET" ]
 then printhtml "<link rel=\"stylesheet\" type=\"text/css\" href=\"${STYLESHEET}\">"
 fi
@@ -165,6 +170,7 @@ printhtml "</head>"
 printhtml "<body>"
 indent="  "
 printhtml "<h2>$DEVICE file listing generated on $(date "+%x %X")</h2>"
+printhtml "<button onclick=\"collapseAll()\">collapse all</button><button onclick=\"expandAll()\">expand all</button>"
 printhtml "<ul>"
 find "$ROOT" -maxdepth "$MAXDEPTH" -mindepth 1 -path "$META" -prune -o  -type d -print0 | sort -z | \
 #για να μην πιάσει το $META, πρέπει να λάβεις υπόψην το παθ του -r σε σχέση με του -t
@@ -174,7 +180,7 @@ do
   then continue
   fi
   indent="  "
-  printhtml "<li class=\"dir\">$dir</li>"
+  printhtml "<li class=\"dir\" onclick=\"hideFiles(this)\">$dir</li>"
   printhtml "<ul class=\"files\">"
   find "$dir" -maxdepth 1 -mindepth 1 -type f -print0 | sort -z | \
   while IFS= read -r -d '' file
