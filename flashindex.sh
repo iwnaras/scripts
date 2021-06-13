@@ -24,7 +24,7 @@
 
 #Μεταβλητές σελίδας
 SCRIPTNAME="flashindex.sh"
-VERSION="0.0"
+VERSION="0.9"
 DEVICE="Verbatim USB drive"
 PAGECOMMENT="© Copyright <a href=\"https://ionas.dev\">Ιωνάρας</a> 2020 $SCRIPTNAME $VERSION"
 #Μεταβλητές καταλόγων
